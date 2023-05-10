@@ -29,5 +29,5 @@ $likeCount = $stmt->fetchColumn();
 
 // Close the database connection
 $db = null;
-header("Location: home.php?likecount=" . $likeCount);
+header("Location: post.php?idPub=". $idPub . "?likecount=" . $likeCount);
 exit();

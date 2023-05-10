@@ -2,6 +2,7 @@
 session_start();
 
 if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
+
     require("config/connexion.php");
 
     $username = $_SESSION['username'];
@@ -34,6 +35,10 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
     // Fetch the results as an associative array
     $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    $query = $db->prepare('SELECT * FROM comments WHERE idPub = :idPub');
+    $query->execute(array(':idPub' => $idPub));
+    $comments = $query->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
     <!DOCTYPE html>
@@ -49,21 +54,6 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/fe459689b4.js"></script>
-        <script>
-            // Handle the AJAX request to update the like count
-            document.getElementById("likeBtn").addEventListener("click", function() {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        // Update the like count on the page
-                        document.getElementById("likeCount").innerHTML = this.responseText;
-                    }
-                };
-                xhr.open("POST", "like.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.send("post_id=<?php echo $post_id; ?>&like=1");
-            });
-        </script>
         <script>
             function toggleCommentForm() {
                 var commentForm = document.getElementById("comment-form");
@@ -111,13 +101,13 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         </div>
                     </div>
                     <div class="flex space-x-4 ">
-                        <a href="#" class="p-4 flex justify-between items-center font-medium text-lg text-black  hover:bg-gray-700 rounded-full hover:text-white duration-300 ">
+                        <a href="home.php" class="p-4 flex justify-between items-center font-medium text-lg text-black  hover:bg-gray-700 rounded-full hover:text-white duration-300 ">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                 <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
                                 <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
                             </svg>
                             <div class="flex items-center justify-center">
-                                <span class="text-xl">Home</span>
+                                <span class="text-xl"> Home</span>
                             </div>
                         </a>
                     </div>
@@ -205,6 +195,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                 // $username = $post['username'];
                 // $idPub = $post['idPub'];
                 require("config/connexion.php");
+                if (isset($_GET['likeCount'])) {
+                    $likeCount = $_GET['likeCount'];
+                }
                 $stmt = $db->prepare('SELECT COUNT(*) FROM likes WHERE idPub = :idPub');
                 $stmt->bindParam(':idPub', $idPub);
                 $stmt->execute();
@@ -235,14 +228,12 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                             <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i>
                             <button class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300" onclick="toggleCommentForm()"></button>
                             <!-- <i class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></i> -->
-                            <form action="like.php" method="post">
+                            <form action="likepost.php" method="post">
                                 <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
                                 <button class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300" type="submit" name="like" id="likeBtn" onclick="location.reload()"></button>
                             </form>
                             <?php
-                            if (isset($_POST['like'])) {
-                                header("Location: home.php" . $_SERVER["HTTP_REFERER"]);
-                            }
+                            
                             ?>
                             <span id="like-count-'<?php echo $idPub; ?> '"><?php echo $likeCount; ?></span>
                             <!-- <i class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300"></i> -->
@@ -251,6 +242,33 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         </div>
 
                     </div>
+                </div>
+                <div class="pt-2"></div>
+                <div class="border border-gray-400 "></div>
+                <div class="flex pt-2">
+                    <div>
+                        <img src="<?php echo $profilepic; ?>" alt="" class="rounded-full w-14">
+                    </div>
+                    <form action="comment.php" method="post">
+
+                        <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
+                        <input type="text" name="contenuComment" class="focus:outline-none placeholder:text-lg placeholder:text-gray-400 placeholder:italic w-96 rounded-full pl-2 p-4 ml-4" placeholder="Add a comment ..." required>
+                        <button name="ok" class="rounded-full  text-white h-10 w-20 bg-teal-500 hover:bg-teal-700 duration-150">Reply</button>
+                </div>
+                <div class="pt-2"></div>
+                <div class="grid pl-14 divide-y">
+                    <?php
+                    foreach ($comments as $comment) {
+                        echo $comment['contenuComment'] . '<br>';
+                    }
+                    ?>
+                    <div class="flex pt-3 mx-4  justify-between">
+
+                        <div class="">
+
+                        </div>
+                    </div>
+                    </form>
                 </div>
                 <div class="pt-2"></div>
                 <div class="border border-gray-400 "></div>
