@@ -3,6 +3,7 @@ session_start();
 
 if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
     require("config/connexion.php");
+    include("config/functions.php");
 
     $username = $_SESSION['username'];
 
@@ -21,8 +22,6 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
     $selPub->execute();
     $posts = $selPub->fetchAll(PDO::FETCH_ASSOC);
 
-
-
 ?>
 
     <!DOCTYPE html>
@@ -34,27 +33,15 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Webtical</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://use.fontawesome.com/fe459689b4.js"></script>
-        <script>
-            // Handle the AJAX request to update the like count
-            document.getElementById("likeBtn").addEventListener("click", function() {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        // Update the like count on the page
-                        document.getElementById("likeCount").innerHTML = this.responseText;
-                    }
-                };
-                xhr.open("POST", "like.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.send("post_id=<?php echo $post_id; ?>&like=1");
-            });
-        </script>
-        <style>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="./js/like.js"></script>
+        <style>
             input[type="file"] {
                 /* Remove default styles */
                 appearance: none;
@@ -80,7 +67,6 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
     </head>
 
     <body>
-        <script src="/js/like.js"></script>
         <div class="flex flex-row ">
             <!--Webtical links-->
             <div class="basis-1/5 p-3 bg-gray-100 rounded-md shadow-md text-black font-semibold min-h-screen ">
@@ -182,16 +168,10 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
 
                 <!-- post div -->
                 <?php foreach ($posts as $post) {
-                    $username = $post['username'];
+                    // $username = $post['username'];
                     $idPub = $post['idPub'];
-                    require("config/connexion.php");
-                    $stmt = $db->prepare('SELECT COUNT(*) FROM likes WHERE idPub = :idPub');
-                    $stmt->bindParam(':idPub', $idPub);
-                    $stmt->execute();
-                    $likeCount = $stmt->fetchColumn();
-                    // header('Location: home.php');
                 ?>
-                    <div class="">
+                    <div id="post" class="">
                         <div class="flex pt-2 space-x-2">
                             <div>
                                 <img src="<?php echo $post['profilepic']; ?>" alt="" class="rounded-full w-14">
@@ -213,19 +193,14 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                             </div>
                             <div class="flex justify-between">&nbsp;
                                 <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i>
-                                <a href="post.php?idPub=<?php echo $idPub;?>" class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></a>
+                                <a href="post.php?idPub=<?php echo $idPub; ?>" class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></a>
                                 <!-- <button class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></button> -->
                                 <!-- <i class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></i> -->
-                                <form action="like.php" method="post">
-                                    <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
-                                    <button class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300" type="submit" name="like" id="likeBtn" onclick="location.reload()"></button>
-                                </form>
-                                <?php
-                                if (isset($_POST['like'])) {
-                                    header("Location: home.php" . $_SERVER["HTTP_REFERER"]);
-                                }
-                                ?>
-                                <span id="like-count-'<?php echo $idPub; ?> '"><?php echo $likeCount; ?></span>
+
+                                <!-- <i <?php if (userLikes($idPub, $_SESSION['username'])) : ?> class="fa-solid fa-heart text-violet-950 like-btn" <?php else : ?> class="fa-solid fa-heart text-violet-600 like-btn" <?php endif ?> data-id="<?php echo $idPub ?>"></i> -->
+                                <i <?php if (userLikes($idPub, $_SESSION['username'])) : ?> class="fa fa-thumbs-up like-btn" 
+                                    <?php else : ?> class="fa fa-thumbs-o-up like-btn" <?php endif ?> data-id="<?php echo $idPub ?>"></i>
+                                <span class="likes"><?php echo getLikes($idPub); ?></span>
                                 <!-- <i class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300"></i> -->
                                 &nbsp;
 

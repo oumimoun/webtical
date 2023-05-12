@@ -2,32 +2,26 @@
 session_start();
 // connect to database using PDO
 require("config/connexion.php");
+include("config/functions.php");
 
-// Get the post ID and the user's username
-$idPub = $_POST["idPub"];
-$username = $_SESSION["username"];
-
-// Check if the user has already liked the post
-$stmt = $db->prepare("SELECT * FROM likes WHERE idPub = ? AND username = ?");
-$stmt->execute([$idPub, $username]);
-$like = $stmt->fetch();
-
-if ($like) {
-    // The user has already liked the post, so delete the like
-    $stmt = $db->prepare("DELETE FROM likes WHERE idPub = ? AND username = ?");
-    $stmt->execute([$idPub, $username]);
-} else {
-    // The user has not liked the post yet, so insert a new like
-    $stmt = $db->prepare("INSERT INTO likes (idPub, username) VALUES (?, ?)");
-    $stmt->execute([$idPub, $username]);
+if (isset($_SESSION['loggedIn'])) {
+    $username = $_SESSION['username'];
 }
-$stmt = $db->prepare('SELECT COUNT(*) FROM likes WHERE idPub = :idPub');
-$stmt->bindParam(':idPub', $idPub);
-$stmt->execute();
-$likeCount = $stmt->fetchColumn();
-// echo $likeCount;
+if (isset($_POST['action'])) {
 
-// Close the database connection
-$db = null;
-header("Location: home.php?likecount=" . $likeCount);
-exit();
+    $idPub = $_POST['idPub'];
+    $action = $_POST['action'];
+    switch ($action) {
+        case 'like':
+            $vote_action = 'like';
+            insert_like($username, $idPub);
+            break;
+        case 'unlike':
+            delete_like($username, $idPub);
+            break;
+        default:
+    }
+    // execute query to effect changes in the database ...
+    echo getRating($idPub);
+    exit(0);
+}
