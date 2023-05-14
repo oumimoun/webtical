@@ -33,7 +33,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Webtical</title>
         <script src="https://cdn.tailwindcss.com"></script>
-
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <script src="https://use.fontawesome.com/fe459689b4.js"></script>
@@ -171,7 +171,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                     // $username = $post['username'];
                     $idPub = $post['idPub'];
                 ?>
-                    <div id="post" class="">
+                    <div id="post" class="post">
                         <div class="flex pt-2 space-x-2">
                             <div>
                                 <img src="<?php echo $post['profilepic']; ?>" alt="" class="rounded-full w-14">
@@ -192,15 +192,31 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                                 </div>
                             </div>
                             <div class="flex justify-between">&nbsp;
-                                <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i>
-                                <a href="post.php?idPub=<?php echo $idPub; ?>" class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></a>
+                                <i class="fi fi-rr-share-square"></i>
+                                <!-- <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i> -->
+                                <a href="post.php?idPub=<?php echo $idPub; ?>"><i class="fi fi-rr-comments"></i></a>
+                                <!-- <i class="fi fi-rr-heart"></i> -->
+                                <!-- class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300" -->
                                 <!-- <button class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></button> -->
                                 <!-- <i class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></i> -->
+                                <?php
+                                $stmt = $db->prepare("SELECT * FROM likes WHERE idPub = :idPub AND username = :username");
+                                $stmt->execute(array(':idPub' => $idPub, ':username' => $_SESSION['username']));
+                                if ($stmt->rowCount() > 0) {
+                                ?>
+                                    <button value="<?php echo $idPub; ?>" class="unlike">Unlike</button>
+                                <?php
+                                } else {
+                                ?>
+                                    <button value="<?php echo $idPub; ?>" class="like">Like</button>
+                                <?php } ?>
+                                <span id="show_like<?php echo $idPub; ?>">
+                                    <?php
+                                    $query3 = $db->query("SELECT COUNT(*) FROM likes WHERE idPub = '" . $idPub . "'");
+                                    echo $query3->fetchColumn();
+                                    ?>
+                                </span>
 
-                                <!-- <i <?php if (userLikes($idPub, $_SESSION['username'])) : ?> class="fa-solid fa-heart text-violet-950 like-btn" <?php else : ?> class="fa-solid fa-heart text-violet-600 like-btn" <?php endif ?> data-id="<?php echo $idPub ?>"></i> -->
-                                <i <?php if (userLikes($idPub, $_SESSION['username'])) : ?> class="fa fa-thumbs-up like-btn" 
-                                    <?php else : ?> class="fa fa-thumbs-o-up like-btn" <?php endif ?> data-id="<?php echo $idPub ?>"></i>
-                                <span class="likes"><?php echo getLikes($idPub); ?></span>
                                 <!-- <i class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300"></i> -->
                                 &nbsp;
 

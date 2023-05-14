@@ -18,6 +18,7 @@ function userLikes($idPub, $username)
 function getLikes($idPub)
 {
     require("config/connexion.php");
+
     $sql = "SELECT COUNT(*) FROM likes WHERE idPub = :idPub";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':idPub', $idPub, PDO::PARAM_INT);
@@ -63,30 +64,3 @@ function getRating($idPub)
     
     return json_encode($result);
 }
-
-function hasUserLiked($username, $idPub) {
-    global $dbh;
-  
-    $stmt = $dbh->prepare("SELECT COUNT(*) FROM likes WHERE username = :username AND idPub = :idPub");
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':idPub', $idPub);
-    $stmt->execute();
-    $count = $stmt->fetchColumn();
-  
-    return ($count > 0);
-  }
-  
-
-// function getRating($idPub)
-// {
-//     require("config/connexion.php");
-//     $rating = array();
-//     $likes = getLikes($idPub);
-//     $rating = [
-//         'likes' => $likes,
-//     ];
-//     return json_encode($rating);
-// }
-
-
-

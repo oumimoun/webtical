@@ -1,20 +1,62 @@
-$(document).ready(function() {
-  $('.like-btn').on('click', function() {
+$(document).ready(function () {
+  $(document).on("click", ".like", function () {
+    var idPub = $(this).val();
     var $this = $(this);
-    var idPub = $this.data('id');
-    var action = $this.hasClass('fa-thumbs-o-up') ? 'like' : 'unlike';
-    
-    $.post('like.php', {action: action, idPub: idPub}, function(data) {
-      var res = JSON.parse(data);
-      $this.toggleClass('fa-thumbs-o-up fa-thumbs-up');
-      $this.siblings('span.likes').text(res.likes);
-      $this.siblings('span.dislikes').text(res.dislikes);
-      $this.siblings('i.fa-thumbs-down').removeClass('fa-thumbs-down').addClass('fa-thumbs-o-down');
-      if(action === 'like') {
-        // reset the like button if the user clicks on the 'like' button
-        $this.removeClass('fa-thumbs-up').addClass('fa-thumbs-o-up');
+    $this.toggleClass("like");
+    if ($this.hasClass("like")) {
+      $this.text("Like");
+    } else {
+      $this.text("Unlike");
+      $this.addClass("unlike");
     }
-    
+    $.ajax({
+      type: "POST",
+      url: "like.php",
+      data: {
+        idPub: idPub,
+        like: 1,
+      },
+      success: function () {
+        showLike(idPub);
+      },
+    });
+  });
+
+  $(document).on("click", ".unlike", function () {
+    var idPub = $(this).val();
+    var $this = $(this);
+    $this.toggleClass("unlike");
+    if ($this.hasClass("unlike")) {
+      $this.text("Unlike");
+    } else {
+      $this.text("Like");
+      $this.addClass("like");
+    }
+    $.ajax({
+      type: "POST",
+      url: "like.php",
+      data: {
+        idPub: idPub,
+        like: 1,
+      },
+      success: function () {
+        showLike(idPub);
+      },
     });
   });
 });
+
+function showLike(idPub) {
+  $.ajax({
+    url: "show_like.php",
+    type: "POST",
+    async: false,
+    data: {
+      idPub: idPub,
+      showlike: 1,
+    },
+    success: function (response) {
+      $("#show_like" + idPub).html(response);
+    },
+  });
+}

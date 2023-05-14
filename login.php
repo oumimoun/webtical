@@ -167,7 +167,7 @@ if (isset($_POST['ok'])) {
     if($countUser > 0){
       header('Location: home.php');
     }else
-      echo'sorry your email/username or password are incorrect';
+      echo'';
   }
 }
 ?>

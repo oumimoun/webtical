@@ -4,24 +4,22 @@ session_start();
 require("config/connexion.php");
 include("config/functions.php");
 
-if (isset($_SESSION['loggedIn'])) {
-    $username = $_SESSION['username'];
-}
-if (isset($_POST['action'])) {
-
+if (isset($_POST['like'])) {
     $idPub = $_POST['idPub'];
-    $action = $_POST['action'];
-    switch ($action) {
-        case 'like':
-            $vote_action = 'like';
-            insert_like($username, $idPub);
-            break;
-        case 'unlike':
-            delete_like($username, $idPub);
-            break;
-        default:
+    $query = $db->prepare("SELECT * FROM likes WHERE idPub=:idPub AND username=:username");
+    $query->bindParam(':idPub', $idPub);
+    $query->bindParam(':username', $_SESSION['username']);
+    $query->execute();
+
+    if ($query->rowCount() > 0) {
+        $deleteQuery = $db->prepare("DELETE FROM likes WHERE username=:username AND idPub=:idPub");
+        $deleteQuery->bindParam(':username', $_SESSION['username']);
+        $deleteQuery->bindParam(':idPub', $idPub);
+        $deleteQuery->execute();
+    } else {
+        $insertQuery = $db->prepare("INSERT INTO likes (username, idPub) VALUES (:username, :idPub)");
+        $insertQuery->bindParam(':username', $_SESSION['username']);
+        $insertQuery->bindParam(':idPub', $idPub);
+        $insertQuery->execute();
     }
-    // execute query to effect changes in the database ...
-    echo getRating($idPub);
-    exit(0);
 }

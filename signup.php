@@ -89,7 +89,7 @@ session_start();
                 $db->exec($insert);
                 $_SESSION['loggedIn'] = true;
                 $_SESSION['username'] = $username;
-                echo " row added successfully ";
+                echo "";
                 header('Location: home.php');
             }
         }

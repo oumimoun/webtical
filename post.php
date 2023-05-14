@@ -35,9 +35,16 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
     // Fetch the results as an associative array
     $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $query = $db->prepare('SELECT * FROM comments WHERE idPub = :idPub');
+
+    $query = $db->prepare('SELECT comments.*, utilisateur.* 
+    FROM comments 
+    INNER JOIN utilisateur ON comments.username = utilisateur.username 
+    WHERE comments.idPub = :idPub
+    ORDER BY dateComment DESC
+    ');
     $query->execute(array(':idPub' => $idPub));
     $comments = $query->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 
@@ -50,20 +57,14 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Webtical</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.tailwindcss.com/versions/2.2.7/@tailwindcss/postcss7-compat" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/fe459689b4.js"></script>
-        <script>
-            function toggleCommentForm() {
-                var commentForm = document.getElementById("comment-form");
-                if (commentForm.style.display === "none") {
-                    commentForm.style.display = "block";
-                } else {
-                    commentForm.style.display = "none";
-                }
-            }
-        </script>
+        <script src="./js/like.js"></script>
         <style>
             input[type="file"] {
                 /* Remove default styles */
@@ -85,6 +86,8 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                 background-color: #f00;
                 color: #fff;
             }
+
+            
         </style>
 
     </head>
@@ -191,20 +194,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                 <!--content-->
 
                 <!-- post div -->
-                <?php
-                // $username = $post['username'];
-                // $idPub = $post['idPub'];
-                require("config/connexion.php");
-                if (isset($_GET['likeCount'])) {
-                    $likeCount = $_GET['likeCount'];
-                }
-                $stmt = $db->prepare('SELECT COUNT(*) FROM likes WHERE idPub = :idPub');
-                $stmt->bindParam(':idPub', $idPub);
-                $stmt->execute();
-                $likeCount = $stmt->fetchColumn();
-                // header('Location: home.php');
-                ?>
-                <div class="">
+                <div id="post" class="post">
                     <div class="flex pt-2 space-x-2">
                         <div>
                             <img src="<?php echo $post['profilepic']; ?>" alt="" class="rounded-full w-14">
@@ -212,6 +202,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         <span class="font-semibold"><?php echo $post['fullname'] ?></span>
                         <span class="font-thin"><em>@</em><?php echo $post['username']; ?></span>
                         <span class="font-light"><?php echo $post['datePub']; ?></span>
+
+                        <a href="#" class="options-link"><i class="fas fa-ellipsis-h"></i></a>
+
                     </div>
                     <div class="pl-14 grid ">
                         <span><?php echo $post['contenuPub']; ?></span>
@@ -225,22 +218,27 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                             </div>
                         </div>
                         <div class="flex justify-between">&nbsp;
-                            <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i>
-                            <button class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300" onclick="toggleCommentForm()"></button>
-                            <!-- <i class="fa-solid fa-comment text-violet-950 hover:text-violet-600 duration-300"></i> -->
-                            <form action="likepost.php" method="post">
-                                <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
-                                <button class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300" type="submit" name="like" id="likeBtn" onclick="location.reload()"></button>
-                            </form>
+                            <i class="fi fi-rr-share-square"></i>
+                            <a href="post.php?idPub=<?php echo $idPub; ?>"><i class="fi fi-rr-comments"></i></a>
                             <?php
-                            
+                            $stmt = $db->prepare("SELECT * FROM likes WHERE idPub = :idPub AND username = :username");
+                            $stmt->execute(array(':idPub' => $idPub, ':username' => $_SESSION['username']));
+                            if ($stmt->rowCount() > 0) {
                             ?>
-                            <span id="like-count-'<?php echo $idPub; ?> '"><?php echo $likeCount; ?></span>
-                            <!-- <i class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300"></i> -->
+                                <button value="<?php echo $idPub; ?>" class="unlike">Unlike</button>
+                            <?php
+                            } else {
+                            ?>
+                                <button value="<?php echo $idPub; ?>" class="like">Like</button>
+                            <?php } ?>
+                            <span id="show_like<?php echo $idPub; ?>">
+                                <?php
+                                $query3 = $db->query("SELECT COUNT(*) FROM likes WHERE idPub = '" . $idPub . "'");
+                                echo $query3->fetchColumn();
+                                ?>
+                            </span>
                             &nbsp;
-
                         </div>
-
                     </div>
                 </div>
                 <div class="pt-2"></div>
@@ -254,28 +252,41 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
                         <input type="text" name="contenuComment" class="focus:outline-none placeholder:text-lg placeholder:text-gray-400 placeholder:italic w-96 rounded-full pl-2 p-4 ml-4" placeholder="Add a comment ..." required>
                         <button name="ok" class="rounded-full  text-white h-10 w-20 bg-teal-500 hover:bg-teal-700 duration-150">Reply</button>
+                    </form>
                 </div>
                 <div class="pt-2"></div>
                 <div class="grid pl-14 divide-y">
                     <?php
                     foreach ($comments as $comment) {
-                        echo $comment['contenuComment'] . '<br>';
+                    ?>
+                        <div id="post" class="post">
+                            <div class="flex pt-2 space-x-2">
+                                <div>
+                                    <img src="<?php echo $comment['profilepic']; ?>" alt="" class="rounded-full w-14">
+                                </div>
+                                <span class="font-semibold"><?php echo $comment['fullname'] ?></span>
+                                <span class="font-thin"><em>@</em><?php echo $comment['username']; ?></span>
+                                <span class="font-light"><?php echo $comment['dateComment']; ?></span>
+                            </div>
+                            <div class="pl-14 grid ">
+                                <span><?php echo $comment['contenuComment']; ?></span>
+                                <div class="rounded-md  p-4">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    <?php
+
                     }
                     ?>
                     <div class="flex pt-3 mx-4  justify-between">
-
                         <div class="">
-
                         </div>
                     </div>
-                    </form>
                 </div>
                 <div class="pt-2"></div>
                 <div class="border border-gray-400 "></div>
-                <?php
-
-                ?>
-
 
             </div>
             <!--Webtical trending & search-->
