@@ -1,5 +1,31 @@
 <?php
 session_start();
+if (isset($_POST['ok'])) {
+
+	if (isset($_POST['username'], $_POST['password'])) {
+		$username = $_POST['username'];
+		$psw = $_POST['password'];
+		$_SESSION['loggedIn'] = true;
+		$_SESSION['username'] = $username;
+
+		require("./config/connexion.php");
+
+		$selUser = $db->prepare('SELECT * FROM utilisateur WHERE (username = :email OR email =:email) AND password = :psw');
+		$selUser->bindParam(':email', $username);
+		$selUser->bindParam(':psw', $psw);
+		$selUser->execute();
+
+		$countUser = $selUser->rowCount();
+		$message = '';
+		if ($countUser > 0) {
+			header('Location: home.php');
+		} else
+			$message = 'sorry your email/username or password are incorrect';
+	}
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +38,7 @@ session_start();
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 	<!-- Custom CSS -->
+	<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 	<style type="text/css">
 		* {
 			margin: 0;
@@ -20,8 +47,11 @@ session_start();
 		}
 
 		body {
-			background: rgb(4, 186, 166);
-			background: linear-gradient(90deg, rgb(4, 168, 149) 0%, rgb(2, 102, 94) 100%);
+			background-image: url('./img/ttten\ \(1\).svg');
+			/* background-repeat:space; */
+			/* width: 100vh;
+			height: 100vh; */
+			background-size: cover;
 		}
 
 		.login-form h2 {
@@ -110,67 +140,81 @@ session_start();
 			margin-top: 10px;
 			color: #37ac92;
 		}
+
+		.password-toggle {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			justify-items: center;
+			/* align-items: center; */
+
+		}
 	</style>
 </head>
 
 <body>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<form class="login-form" action="./login.php" method="post">
 					<div class="logo">
-						<img src="./img/LOGO.png">
+						<a href="index.php">
+						<img src="./img/LOGO.png"></a>
 					</div>
 
 					<h2 class="text-center">Login</h2>
 					<br>
+					<?php if (!empty($message)) : ?>
+						<div class="alert alert-danger" role="alert">
+							<strong class="font-bold">Holy smokes!</strong>
+							<span class=""><?php echo $message; ?></span>
+						</div>
+					<?php endif; ?>
 					<div class="form-group">
 						<label for="username & E-mail">Username or E-mail address</label>
 						<input type="text" class="form-control" id="username" name="username" placeholder="Enter username or E-mail">
 					</div>
 					<div class="form-group">
 						<label for="password">Password</label>
-						<input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+						<div class="password-toggle">
+							<input type="password" class="form-control" name="password" id="password" placeholder="Enter password" >
+							<span class="toggle-password" onclick="togglePasswordVisibility()" style="margin-left:10px;margin: 10px;"><i class="fa fa-eye"></i></span>
+						</div>
 					</div>
+
 					<div class="form-group form-check">
 						<input type="checkbox" class="form-check-input" id="remember-me">
 						<label class="form-check-label" for="remember-me">Remember me</label>
 					</div>
 					<button type="submit" name="ok" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i>Login</button>
 					<a href="#" class="forgot-password">Forgot Password?</a>
-					<a href="/web-test/singup.php" class="create-account">Create New Account</a>
+					<a href="./signup.php" class="create-account">Create New Account</a>
+					<script>
+						function togglePasswordVisibility() {
+							var passwordField = document.getElementById("password");
+							var toggleButton = document.querySelector(".toggle-password");
+
+							if (passwordField.type === "password") {
+								passwordField.type = "text";
+								toggleButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
+							} else {
+								passwordField.type = "password";
+								toggleButton.innerHTML = '<i class="fa fa-eye"></i>';
+							}
+						}
+					</script>
 				</form>
+
+
 			</div>
 		</div>
 	</div>
 
+
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-zML4GHUv7VW4O8sydSyLqb//LeIo16v7MmH8C9P9oavNbYfj+zAwKLWTRerHr2Cz" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-q8i/X9YF+20GdOSKk57NkKj0EwUNlGwR/qlZfjKWHpX9+MGBbE98s1mHMc/KJ8Qr" crossorigin="anonymous"></script>
-	<?php
-if (isset($_POST['ok'])) {
-  if (isset($_POST['username'] , $_POST['password'])) {
-    $username = $_POST['username'];
-    $psw = $_POST['password'];
-	$_SESSION['loggedIn'] = true;
-	$_SESSION['username'] = $username;
 
-    require("./config/connexion.php");
-
-    $selUser=$db->prepare('SELECT * FROM utilisateur WHERE (email = :email OR username =:email) AND password = :psw');
-    $selUser->bindParam(':email', $username);
-    $selUser->bindParam(':psw', $psw);
-    $selUser->execute();
-
-    $countUser=$selUser->rowCount();
-
-    if($countUser > 0){
-      header('Location: home.php');
-    }else
-      echo'';
-  }
-}
-?>
 </body>
 
 </html>

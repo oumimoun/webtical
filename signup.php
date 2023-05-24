@@ -11,13 +11,16 @@ session_start();
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body>
+<body style="background-image: url('./img/ttten\ \(1\).svg');
+    
+    background-repeat:no-repeat;
+    background-size: cover;">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <form class="sp" action="signup.php" method="post">
+                <form class="sp" action="./signup.php" enctype="multipart/form-data" method="post">
                     <div class="logo">
-                        <img src="./img/LOGO.png">
+                        <a href="index.php"><img src="./img/LOGO.png"></a>
                     </div>
                     <h1>Sign up</h1>
                     <div class="form-group">
@@ -41,6 +44,10 @@ session_start();
                         <input type="date" id="dob" name="dob" class="form-control" required>
                     </div>
                     <div class="form-group">
+                        <label for="profilepic">Profile picture</label>
+                        <input type="file" id="profilepic" name="file" accept="image/*" class="form-control-file" >
+                    </div>
+                    <div class="form-group">
                         <label for="bio">Bio</label>
                         <textarea id="bio" name="bio" class="form-control" rows="3" maxlength="160"></textarea>
                     </div>
@@ -50,8 +57,10 @@ session_start();
                             I agree to the <a href="#">terms and conditions</a>.
                         </label>
                     </div>
-                    <button type="submit" name="ok" class="btn btn-primary"> Sign up</button>
+                    <button type="submit" name="ok" class="btn btn-primary">Sign up</button>
                 </form>
+
+
             </div>
         </div>
     </div>
@@ -64,36 +73,59 @@ session_start();
     if (isset($_POST['ok'])) {
         if (isset($_POST['fullname'], $_POST['username'], $_POST['email'], $_POST['password'], $_POST['dob'], $_POST['bio'])) {
             $_SESSION['loggedIn'] = true;
-            // Get form data
-            $fullname = $_POST['fullname'];
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $dob = $_POST['dob'];
-            $bio = $_POST['bio'];
-
+            // Connexion à la base de données
             require("config/connexion.php");
 
-            $selUser = $db->prepare('SELECT * FROM utilisateur WHERE email = :email OR username = :username');
-            $selUser->bindParam(':email', $email);
-            $selUser->bindParam(':username', $username);
-            $selUser->execute();
+            // Préparation de la requête d'insertion
+            $stmt = $db->prepare("INSERT INTO utilisateur (username, fullname, email, password, dob, bio, name, image) VALUES (:nom_utilisateur, :nom_complet, :email, :mot_de_passe, :date_naissance, :bio, :name, :image)");
 
-            $countUser = $selUser->rowCount();
+            // Bind des paramètres de la requête
+            $stmt->bindParam(':nom_utilisateur', $_POST['username']);
+            $stmt->bindParam(':nom_complet', $_POST['fullname']);
+            $stmt->bindParam(':email', $_POST['email']);
+            $stmt->bindParam(':mot_de_passe', $_POST['password']); // On hash le mot de passe
+            $stmt->bindParam(':date_naissance', $_POST['dob']);
+            $stmt->bindParam(':bio', $_POST['bio']);
+            $stmt->bindParam(':name', $_FILES['file']['name']);
 
-            if ($countUser > 0) {
-                echo 'your user name or password is already exist';
+            // Upload de l'image
+            $name = $_FILES['file']['name'];
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["file"]["name"]);
+
+            // Select file type
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            // Valid file extensions
+            $extensions_arr = array("jpg", "jpeg", "png", "gif","jfif");
+
+            // Check extension
+            if (in_array($imageFileType, $extensions_arr)) {
+                // Upload file
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name)) {
+                    // Convert to base64
+                    $image_base64 = base64_encode(file_get_contents('uploads/' . $name));
+                    $image = 'data:image/' . $imageFileType . ';base64,' . $image_base64;
+
+                    $stmt->bindParam(':image', $image);
+                } else {
+                    $stmt->bindValue(':image', null, PDO::PARAM_NULL);
+                }
             } else {
-                $_SESSION['loggedIn'] = true;
-                $insert = "INSERT INTO utilisateur VALUES ('$username', '$fullname', '$email','$password','$dob', '$bio', NULL, NULL)";
-                $db->exec($insert);
-                $_SESSION['loggedIn'] = true;
-                $_SESSION['username'] = $username;
-                echo "";
+                $stmt->bindValue(':image', null, PDO::PARAM_NULL);
+            }
+
+            // Exécution de la requête d'insertion
+            if ($stmt->execute()) {
+                // Redirection vers la page de connexion
                 header('Location: home.php');
+                exit();
+            } else {
+                echo "Erreur lors de l'insertion des données dans la base de données.";
             }
         }
     }
+
     ?>
 </body>
 

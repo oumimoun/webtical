@@ -7,7 +7,7 @@ if (isset($_POST['ok'])) {
     require("config/connexion.php");
     $username = $_SESSION["username"];
     $idPub = $_POST['idPub'];
-    $contenuComment = $_POST['contenuComment'];
+    $contenuComment = $_POST['comment'];
 
     // Insert the comment into the database
     $query = $db->prepare('INSERT INTO comments (username, idPub, contenuComment) VALUES (:username, :idPub, :contenuComment)');
@@ -19,4 +19,4 @@ if (isset($_POST['ok'])) {
 
     exit();
 }
-
+?>

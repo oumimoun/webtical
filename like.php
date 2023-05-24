@@ -23,3 +23,4 @@ if (isset($_POST['like'])) {
         $insertQuery->execute();
     }
 }
+?>
