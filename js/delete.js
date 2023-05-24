@@ -6,7 +6,7 @@ function followUser(event, username) {
             // handle the response here, if necessary
             // Update the button or perform any other desired actions
             var button = event.target;
-            button.textContent = "Unfollow";
+            button.textContent = "Follow";
             button.onclick = function(event) {
                 unfollowUser(event, username);
             };
@@ -14,7 +14,7 @@ function followUser(event, username) {
     };
     xhr.open("POST", "follow.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("followed_user=" + username);
+    xhr.send("unfollowed_user=" + username);
 }
 
 function unfollowUser(event, username) {
@@ -25,7 +25,7 @@ function unfollowUser(event, username) {
             // handle the response here, if necessary
             // Update the button or perform any other desired actions
             var button = event.target;
-            button.textContent = "Follow";
+            button.textContent = "Unfollow";
             button.onclick = function(event) {
                 followUser(event, username);
             };
@@ -33,5 +33,5 @@ function unfollowUser(event, username) {
     };
     xhr.open("POST", "unfollow.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("unfollowed_user=" + username);
+    xhr.send("followed_user=" + username);
 }

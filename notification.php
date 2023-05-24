@@ -27,7 +27,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
     $query->execute(array($_SESSION['username']));
     $result1 = $query->fetchAll(PDO::FETCH_ASSOC);
 
-    $query2 = $db->prepare('SELECT * FROM notifications WHERE username = ? ORDER BY dateNotif DESC');
+    $query2 = $db->prepare('SELECT * FROM notifications WHERE following_user = ? ORDER BY dateNotif DESC');
     $query2->execute(array($_SESSION['username']));
     $result2 = $query2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -169,7 +169,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                             echo "<i class='fi fi-rr-heart m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " liked your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
                         } elseif ($notif['type'] == "comment") {
                             echo "<i class='fi fi-rr-comments m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " commented on your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                        } elseif ($notif['type'] == "follow") {
+                        }elseif ($notif['type'] == "follow") {
                             echo "<i class='fi fi-rr-following m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " followed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
                         } else {
                             echo "<i class='fi fi-rr-delete-user m-6 te'></i><span class='text-gray-600' >" . $notif['username'] . " unfollowed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
@@ -179,6 +179,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                         <div class="border border-gray-400 "></div>
                     <?php
                     }
+                    
                     ?>
                 </div>
 
