@@ -19,7 +19,10 @@
 <img src="./uploads/notif.png">
 <h3>Edit Profile : </h3>
 <img src="./uploads/modifprofile.png">
+<<<<<<< HEAD
 <h3>Friends : </h3>
 <img src="./uploads/Friends.png">
 <h3>Chats : </h3>
 <img src="./uploads/Chats.png">
+=======
+>>>>>>> 3e3a75005cc0196489b2da97a4f16214d276c231
