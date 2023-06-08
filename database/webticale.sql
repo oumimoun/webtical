@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 30 mai 2023 à 04:36
+-- Généré le : jeu. 08 juin 2023 à 15:49
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.1.6
 
@@ -47,7 +47,8 @@ INSERT INTO `comments` (`idComment`, `username`, `idPub`, `contenuComment`, `dat
 (73, '_pp', 153, 'hhhhhhhhh', '2023-05-26 16:10:22'),
 (74, '_pp', 151, 'salut', '2023-05-29 06:07:26'),
 (75, 'yassine_12', 156, 'hi oussama!', '2023-05-29 06:23:44'),
-(76, 'ouss_pp', 161, 'salut', '2023-05-29 22:30:18');
+(82, 'ouss_pp', 167, 'good', '2023-05-31 15:21:28'),
+(83, '_pp', 172, 'nice pic', '2023-06-06 18:07:25');
 
 --
 -- Déclencheurs `comments`
@@ -86,14 +87,16 @@ CREATE TABLE `followers` (
 
 INSERT INTO `followers` (`id`, `username`, `follower_user`, `created_at`) VALUES
 (150, 'ouss_pp', '_pp', '2023-05-24 07:56:36'),
-(151, 'ouss_pp', 'ouzahoudix', '2023-05-24 07:56:40'),
 (156, '_pp', 'yassine_12', '2023-05-26 16:10:07'),
 (170, '_pp', 'ouss_pp', '2023-05-28 06:58:04'),
-(172, '_pp', 'ouzahoudix', '2023-05-29 00:06:24'),
 (173, '_pp', 'pedro123', '2023-05-29 00:30:34'),
 (174, 'yassine_12', '_pp', '2023-05-29 06:23:18'),
 (175, 'yassine_12', 'ouss_pp', '2023-05-29 06:23:21'),
-(176, 'ouss_pp', 'pedro123', '2023-05-30 01:19:25');
+(178, 'ouss_pp', 'yassine_12', '2023-05-31 09:07:12'),
+(179, 'yassine_12', 'pedro123', '2023-05-31 13:08:29'),
+(181, 'ouzahoudix', 'pedro123', '2023-05-31 14:15:07'),
+(182, 'ouzahoudix', 'yassine_12', '2023-05-31 14:16:13'),
+(183, 'ouzahoudix', '_pp', '2023-05-31 14:16:14');
 
 --
 -- Déclencheurs `followers`
@@ -133,7 +136,8 @@ CREATE TABLE `likes` (
 
 INSERT INTO `likes` (`idLike`, `username`, `idPub`) VALUES
 (306, 'ouss_pp', 149),
-(319, 'ouss_pp', 161),
+(326, 'ouss_pp', 152),
+(333, 'ouss_pp', 167),
 (310, 'yassine_12', 149),
 (309, 'yassine_12', 151),
 (307, 'yassine_12', 153),
@@ -184,7 +188,17 @@ INSERT INTO `message` (`id`, `sender`, `receiver`, `message`, `timestamp`) VALUE
 (1, '_pp', 'ouss_pp', 'hii', '2023-05-29 22:10:39'),
 (2, 'ouss_pp', '_pp', 'hello', '2023-05-29 22:14:35'),
 (3, 'ouss_pp', 'yassine_12', 'yoo yassine', '2023-05-29 22:15:15'),
-(4, 'ouss_pp', '_pp', 'how are you?', '2023-05-30 02:33:55');
+(4, 'ouss_pp', '_pp', 'how are you?', '2023-05-30 02:33:55'),
+(5, 'ouss_pp', '_pp', 'yoo oussama', '2023-05-31 09:04:16'),
+(6, 'yassine_12', 'ouss_pp', 'salut oussama', '2023-05-31 13:08:54'),
+(7, 'yassine_12', '_pp', 'hello', '2023-05-31 13:09:09'),
+(28, '_pp', 'yassine_12', 'yoo oussama', '2023-06-06 17:55:47'),
+(37, '_pp', 'yassine_12', 'how are you?', '2023-06-06 17:58:34'),
+(38, '_pp', 'yassine_12', 'bjkgjh', '2023-06-06 17:58:38'),
+(39, '_pp', 'yassine_12', 'how are you?', '2023-06-06 17:59:03'),
+(40, '_pp', 'yassine_12', 'hbhb', '2023-06-06 17:59:07'),
+(41, '_pp', 'yassine_12', 'jksdhfjkshfk', '2023-06-06 17:59:28'),
+(42, '_pp', 'yassine_12', 'sdfsfsf', '2023-06-06 17:59:37');
 
 -- --------------------------------------------------------
 
@@ -259,11 +273,47 @@ INSERT INTO `notifications` (`idNotif`, `type`, `following_user`, `idPub`, `user
 (196, 'share', '', 151, 'yassine_12', '2023-05-29 07:25:45'),
 (197, 'share', '', 156, 'yassine_12', '2023-05-29 07:29:20'),
 (198, 'share', '', 149, 'yassine_12', '2023-05-29 07:40:26'),
-(199, 'share', '', 161, '_pp', '2023-05-29 22:04:04'),
-(200, 'share', '', 161, 'ouss_pp', '2023-05-29 22:16:02'),
-(201, 'comment', '', 161, 'ouss_pp', '2023-05-29 22:30:18'),
-(202, 'like', '', 161, 'ouss_pp', '2023-05-29 22:32:14'),
-(203, 'follow', 'pedro123', NULL, 'ouss_pp', '2023-05-30 01:19:25');
+(203, 'follow', 'pedro123', NULL, 'ouss_pp', '2023-05-30 01:19:25'),
+(207, 'share', '', 156, '_pp', '2023-05-31 06:46:26'),
+(208, 'share', '', 151, 'ouss_pp', '2023-05-31 06:55:48'),
+(212, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-05-31 09:03:28'),
+(213, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-05-31 09:03:35'),
+(217, 'follow', 'yassine_12', NULL, 'ouss_pp', '2023-05-31 09:07:12'),
+(220, 'unfollow', 'pedro123', NULL, 'ouss_pp', '2023-05-31 09:17:21'),
+(222, 'like', '', 152, 'ouss_pp', '2023-05-31 12:54:07'),
+(223, 'follow', 'pedro123', NULL, 'yassine_12', '2023-05-31 13:08:29'),
+(225, 'follow', 'ouzahoudix', NULL, 'yassine_12', '2023-05-31 13:18:35'),
+(227, 'unfollow', 'ouzahoudix', NULL, 'yassine_12', '2023-05-31 13:19:59'),
+(231, 'share', '', 166, 'yassine_12', '2023-05-31 13:35:38'),
+(232, 'share', '', 165, 'yassine_12', '2023-05-31 13:37:44'),
+(233, 'share', '', 167, 'yassine_12', '2023-05-31 13:38:14'),
+(234, 'share', '', 166, 'ouss_pp', '2023-05-31 13:53:44'),
+(237, 'follow', 'pedro123', NULL, 'ouzahoudix', '2023-05-31 14:15:07'),
+(238, 'share', '', 167, 'ouzahoudix', '2023-05-31 14:15:24'),
+(239, 'share', '', 165, 'ouzahoudix', '2023-05-31 14:16:03'),
+(240, 'follow', 'yassine_12', NULL, 'ouzahoudix', '2023-05-31 14:16:13'),
+(241, 'follow', '_pp', NULL, 'ouzahoudix', '2023-05-31 14:16:14'),
+(242, 'share', '', 151, 'ouzahoudix', '2023-05-31 14:16:28'),
+(243, 'share', '', 152, 'ouss_pp', '2023-05-31 14:28:49'),
+(247, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-05-31 15:02:51'),
+(248, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-05-31 15:02:53'),
+(251, 'like', '', 167, 'ouss_pp', '2023-05-31 15:21:12'),
+(252, 'comment', '', 167, 'ouss_pp', '2023-05-31 15:21:28'),
+(253, 'follow', 'pedro123', NULL, 'ouss_pp', '2023-05-31 15:30:25'),
+(254, 'unfollow', 'pedro123', NULL, 'ouss_pp', '2023-05-31 15:30:26'),
+(255, 'follow', 'pedro123', NULL, 'ouss_pp', '2023-05-31 15:30:28'),
+(256, 'unfollow', 'pedro123', NULL, 'ouss_pp', '2023-05-31 15:30:30'),
+(257, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:53'),
+(258, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:54'),
+(259, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:55'),
+(260, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:55'),
+(261, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:56'),
+(262, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:56'),
+(263, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:56'),
+(264, 'follow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:04:59'),
+(265, 'unfollow', 'ouzahoudix', NULL, 'ouss_pp', '2023-06-02 07:05:01'),
+(266, 'unfollow', 'ouzahoudix', NULL, '_pp', '2023-06-05 16:34:05'),
+(267, 'comment', '', 172, '_pp', '2023-06-06 18:07:25');
 
 -- --------------------------------------------------------
 
@@ -289,10 +339,11 @@ INSERT INTO `publication` (`idPub`, `username`, `contenuPub`, `image`, `datePub`
 (152, 'ouss_pp', 'hello world', '', '2023-05-24 09:10:11'),
 (153, 'yassine_12', 'it\'s really nice to be here ', '', '2023-05-24 09:11:01'),
 (156, '_pp', 'heeeeeello', '', '2023-05-29 06:19:54'),
-(158, 'yassine_12', 'yup', '', '2023-05-29 07:30:56'),
-(160, 'yassine_12', 'yoo', '', '2023-05-29 07:35:41'),
-(161, 'yassine_12', 'slm', '', '2023-05-29 07:37:03'),
-(162, 'ouss_pp', 'bojack', '20220510_041155.jpg', '2023-05-30 00:35:33');
+(165, 'yassine_12', 'hello world', '', '2023-05-31 13:34:49'),
+(166, 'yassine_12', 'j\'aime', '20220510_041458.jpg', '2023-05-31 13:35:24'),
+(167, 'yassine_12', 'hi', '20220510_040906.jpg', '2023-05-31 13:38:09'),
+(170, 'ouss_pp', 'hello webtical', '', '2023-05-31 15:20:21'),
+(172, '_pp', 'let\'s try adding post', '2560px-Logo.min.svg.png', '2023-06-06 18:05:56');
 
 -- --------------------------------------------------------
 
@@ -312,11 +363,14 @@ CREATE TABLE `shares` (
 --
 
 INSERT INTO `shares` (`id`, `post_id`, `username`, `timestamp`) VALUES
-(19, 151, 'yassine_12', '2023-05-29 07:25:45'),
-(20, 156, 'yassine_12', '2023-05-29 07:29:20'),
-(21, 149, 'yassine_12', '2023-05-29 07:40:26'),
-(22, 161, '_pp', '2023-05-29 22:04:04'),
-(23, 161, 'ouss_pp', '2023-05-29 22:16:02');
+(30, 166, 'yassine_12', '2023-05-31 13:35:38'),
+(31, 165, 'yassine_12', '2023-05-31 13:37:44'),
+(32, 167, 'yassine_12', '2023-05-31 13:38:14'),
+(33, 166, 'ouss_pp', '2023-05-31 13:53:44'),
+(36, 167, 'ouzahoudix', '2023-05-31 14:15:24'),
+(37, 165, 'ouzahoudix', '2023-05-31 14:16:03'),
+(38, 151, 'ouzahoudix', '2023-05-31 14:16:28'),
+(39, 152, 'ouss_pp', '2023-05-31 14:28:49');
 
 --
 -- Déclencheurs `shares`
@@ -464,43 +518,43 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `idComment` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `idComment` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT pour la table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT pour la table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `idLike` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
+  MODIFY `idLike` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=334;
 
 --
 -- AUTO_INCREMENT pour la table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT pour la table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `idNotif` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+  MODIFY `idNotif` int(40) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=268;
 
 --
 -- AUTO_INCREMENT pour la table `publication`
 --
 ALTER TABLE `publication`
-  MODIFY `idPub` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `idPub` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
 
 --
 -- AUTO_INCREMENT pour la table `shares`
 --
 ALTER TABLE `shares`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT pour la table `trends`

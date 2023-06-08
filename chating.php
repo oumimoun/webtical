@@ -77,7 +77,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
             <!--Webtical links-->
             <?php include 'layouts/header.php'; ?>
             <!--Webtical main-->
-            <div class="basis-1/2 p-4  bg-gray-200 rounded-md shadow-md text-black font-semibold">
+            <div class="basis-1/2 max-[970px]:basis-full p-4   bg-gray-200 rounded-md shadow-md text-black font-semibold">
                 <div class="flex justify-between">
                     <span class="text-lg font-semibold">
                         Chat
@@ -124,31 +124,31 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                             </div>
 
                             <div class="mt-8 ">
-                                <div class="bg-gray-200  rounded-lg drop-shadow-lg p-4" style="background-image:url('./img/tttend.svg');background-size: cover;width:100%;height:100%;">
-                                    <div class="overflow-y-auto overflow-x-hidden max-h-screen h-96  p-4">
+                                <div class="bg-gray-200  rounded-lg drop-shadow-lg  p-4" style="background-image:url('./img/tttend.svg');background-size: cover;width:100%;height:100%;">
+                                    <div class="overflow-y-auto overflow-x-auto h-96  max-h-96        p-4">
                                         <div class="flex flex-col space-y-2" id="messageContainer">
                                             <?php foreach ($messages as $message) {
-                                                $isSender = $message['sender'] === $senderUsername; // Check if the message sender is the current user
+                                                $isSender = $message['sender'] === $senderUsername; ////// Check if the message sender is the current user
                                             ?>
-                                                <div class="flex items-start">
+                                                <div class="flex items-start ">
                                                     <?php if ($message['sender'] === $_SESSION['username']) {
-                                                        $senderProfilePic = $profilePicture; 
+                                                        $senderProfilePic = $profilePicture;
                                                     ?>
-                                                        <div class="flex relative right-0 left-80 border border-gray-200 rounded-full  bg-gray-100 p-2"> 
+                                                        <div class="flex relative right-0 left-2/3 min-[1533px]:left-96  border border-gray-200 rounded-full  bg-teal-400 p-2  min-[970px]:left-72 min-[970px]:w-60 h-auto  ">
                                                             <div class="mr-2 ">
                                                                 <!-- <p class="font-semibold"><?= $_SESSION['username'] ?></p> -->
-                                                                <p class="px-2 py-1 text-base text-gray-700 w-16 md:w-36 lg:w-44 truncate"><?= $message['message'] ?></p>
+                                                                <p class="px-2 py-1 text-base text-gray-900 w-16 md:w-36 lg:w-44 truncate"><?= $message['message'] ?></p>
                                                             </div>
-                                                            <img class="w-8 h-8 rounded-full" src="<?= $senderProfilePic ?>" alt="Sender Profile Picture">
+                                                            <img class="w-8 h-auto  rounded-full" src="<?= $senderProfilePic ?>" alt="Sender Profile Picture">
                                                             <!-- <div class="pt-2"></div> -->
                                                             <!-- <div class="border border-gray-400 "></div> -->
                                                         </div>
                                                     <?php } else { ?>
-                                                        <div class="flex relative right-0 left-5 border border-gray-200 rounded-full bg-gray-100 p-2 "> 
-                                                            <img class="w-8 h-8 rounded-full" src="<?= $recipientProfilePic ?>" alt="Recipient Profile Picture">
+                                                        <div class="flex relative right-0 left-5 border border-gray-200  rounded-full bg-gray-100 p-2 max-[970px]:w-60 h-auto  ">
+                                                            <img class="w-8 h-auto rounded-full" src="<?= $recipientProfilePic ?>" alt="Recipient Profile Picture">
                                                             <div class="ml-2">
                                                                 <!-- <p class="font-semibold"><?= $recipientFullName ?></p> -->
-                                                                <p class="px-2 py-1 text-base text-gray-700 w-36 truncate"><?= $message['message'] ?></p>
+                                                                <p class="px-2 py-1 text-base text-gray-900 w-36 truncate"><?= $message['message'] ?></p>
                                                             </div>
                                                             <!-- <div class="pt-2"></div> -->
                                                             <!-- <div class="border border-gray-400 "></div> -->
@@ -180,8 +180,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
             </div>
 
             <!--Webtical trending & search-->
+<div class="hidden min-[970px]:block">
             <?php include 'layouts/footer.php'; ?>
-        </div>
+</div>
 
     </body>
 

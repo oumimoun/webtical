@@ -1,5 +1,5 @@
 <!--Webtical trending & search-->
-<div class="basis-1/4 p-4 bg-gray-300 rounded-md shadow-md text-black font-semibold h-fit">
+<div class="basis-1/4 max-[1112px]:basis-1/3 p-4 bg-gray-300 rounded-md shadow-md text-black font-semibold h-fit">
     <div class="relative text-gray-600 focus-withi:text-gray-400">
         <span class="absolute inset-y-0 left-0 flex items-center pl-2">
             <button type="submit" class="p-1 focus:outline-none focus:shadow-outline">
@@ -56,7 +56,7 @@
                     <div class="flex justify-between space-x-2">
                         <div class="flex space-x-2">
                             <div>
-                                <img src="<?= $user['image'] ?>" alt="" class="rounded-full w-14">
+                                <img src="<?= $user['image'] ?>" alt="" class="rounded-full w-14 h-auto">
                             </div>
                             <div class="grid">
                                 <span class="font-semibold"><a href="showprofile.php?id=<?php echo $user['username']; ?>"> <?= $user['fullname'] ?></a></span>

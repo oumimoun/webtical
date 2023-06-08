@@ -70,9 +70,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                         $follower = $stmt->fetch(PDO::FETCH_ASSOC);
                         if ($follower) { ?>
                             <div class="flex justify-between space-x-2 p-5">
-                                <div class="flex space-x-2">
+                                <div class="flex space-x-2 ">
                                     <div>
-                                        <img src="<?= $follower['image'] ?>" alt="" class="rounded-full w-14">
+                                        <img src="<?= $follower['image'] ?>" alt="" class="rounded-full w-14 h-auto min-[500px]:w-16 ">
                                     </div>
                                     <div class="grid">
                                         <span class="font-semibold"><?= $follower['fullname'] ?></span>

@@ -47,7 +47,7 @@ if (isset($_POST['ok'])) {
 		}
 
 		body {
-			background-image: url('./img/ttten\ \(1\).svg');
+			background-image: url('./img/tttend.svg');
 			/* background-repeat:space; */
 			/* width: 100vh;
 			height: 100vh; */

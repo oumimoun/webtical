@@ -101,36 +101,38 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                 <!--content-->
 
                 <!-- notification div -->
-                <div>
+                <!-- <div class=> -->
 
-                    <?php
-                    $result = array_merge($result1, $result2);
+                <?php
+                $result = array_merge($result1, $result2);
 
-                    foreach ($result as $notif) {
+                foreach ($result as $notif) {
 
-                        if ($notif['type'] == "like") {
-                            echo "<i class='fi fi-rr-heart m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " liked your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                        } elseif ($notif['type'] == "comment") {
-                            echo "<i class='fi fi-rr-comments m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " commented on your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                        }elseif ($notif['type'] == "follow") {
-                            echo "<i class='fi fi-rr-following m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " followed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                        } elseif ($notif['type'] == "unfollow") {
-                            echo "<i class='fi fi-rr-delete-user m-6 te'></i><span class='text-gray-600' >" . $notif['username'] . " unfollowed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                        }else{
-                            echo "<i class='fi fi-rr-share-square m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " shared your post at <u>" . $notif['dateNotif'] . '</u></span><br>'; 
-                        }
-                    ?>
-                        <div class="pt-2"></div>
-                        <div class="border border-gray-400 "></div>
-                    <?php
+                    if ($notif['type'] == "like") {
+                        echo "<i class='fi fi-rr-heart m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " liked your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                    } elseif ($notif['type'] == "comment") {
+                        echo "<i class='fi fi-rr-comments m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " commented on your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                    } elseif ($notif['type'] == "follow") {
+                        echo "<i class='fi fi-rr-following m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " followed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                    } elseif ($notif['type'] == "unfollow") {
+                        echo "<i class='fi fi-rr-delete-user m-6 te'></i><span class='text-gray-600' >" . $notif['username'] . " unfollowed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                    } else {
+                        echo "<i class='fi fi-rr-share-square m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " shared your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
                     }
-                    
-                    ?>
-                </div>
+                ?>
+                    <div class="pt-2"></div>
+                    <div class="border border-gray-400 "></div>
+                <?php
+                }
+
+                ?>
+                <!-- </div> -->
 
             </div>
+
             <!--Webtical trending & search-->
             <?php include 'layouts/footer.php'; ?>
+        </div>
     </body>
 
     </html>

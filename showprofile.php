@@ -92,7 +92,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['id'])) {
                 <!--content-->
 
                 <div id="post" class="p-4 ">
-                    <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 h-64 border border-gray-400 rounded-xl"></div>
+                    <div class="bg-gradient-to-r from-blue-300 to-blue-400 h-64 border border-gray-400 rounded-xl"></div>
                     <div class="flex justify-center  border-gray-400 rounded-lg w-full mx-auto">
 
                         <div id="postCount" class="flex flex-col items-center">
@@ -241,9 +241,6 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['id'])) {
                     <?php
                     }
                     ?>
-
-
-
                 </div>
             </div>
             <!--Webtical trending & search-->

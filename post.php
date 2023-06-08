@@ -189,12 +189,12 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                     <div class="pl-14 grid ">
                         <br>
                         <br>
-                        <span class="ml-4"><?php echo $post['contenuPub']; ?></span>
+                        <span class="ml-8 w-96 truncate"><?php echo $post['contenuPub']; ?></span>
                         <div class="rounded-md  p-4">
                             <div class="flex space-x-3">
                                 <?php
                                 if ($post['image']) {
-                                    echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg w-96 h-auto ml-14">';
+                                    echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg w-96 h-auto ml-14 max-[1082px]:w-80 max-[1082px]:ml-5">';
                                 }
                                 ?>
                             </div>
@@ -250,7 +250,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                     <form action="comment.php" method="post">
 
                         <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
-                        <input type="text" name="comment" class="w-96 focus:outline-none focus:border-indigo-500/100 placeholder:text-medium placeholder:text-gray-400 placeholder:italic  rounded-full pl-2 p-4 ml-4" placeholder="Add a comment ..." required>
+                        <input type="text" name="comment" class="w-96 focus:outline-none focus:border-indigo-500/100 placeholder:text-medium placeholder:text-gray-400 placeholder:italic  rounded-full pl-2 p-4 ml-4 max-[1176px]:w-72 h-12" placeholder="Add a comment ..." required>
                         <button name="ok" class="rounded-full  text-white p-2 bg-teal-500 hover:bg-teal-700 duration-150">Comment</button>
                     </form>
                 </div>
@@ -268,8 +268,8 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                                 <span class="font-thin"><em>@</em><?php echo $comment['username']; ?></span>
                                 <span class="font-light "><?php echo $comment['dateComment']; ?></span>
                             </div>
-                            <div class="pl-14 grid ">
-                                <span><?php echo $comment['contenuComment']; ?></span>
+                            <div class="pl-14 grid ml-2 w-96 truncate">
+                                <span class=" "><?php echo $comment['contenuComment']; ?></span>
                                 <div class="rounded-md  p-4">
                                 </div>
                             </div>
