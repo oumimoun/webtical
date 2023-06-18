@@ -35,7 +35,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
     $queryT->execute();
     $trends = $queryT->fetchAll(PDO::FETCH_ASSOC);
 
-?>
+    ?>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -46,86 +46,61 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Webtical</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.tailwindcss.com/versions/2.2.7/@tailwindcss/postcss7-compat" rel="stylesheet">
+        <!-- <link href="https://cdn.tailwindcss.com/versions/2.2.7/@tailwindcss/postcss7-compat" rel="stylesheet"> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css'>
         <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" /> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://use.fontawesome.com/fe459689b4.js"></script>
-        <script src="./js/like.js"></script>
-        <style>
-            input[type="file"] {
-                /* Remove default styles */
-                appearance: none;
-                -webkit-appearance: none;
-                /* Position off-screen */
-                position: absolute;
-                left: -9999px;
-            }
-
-            .like-btn {
-                background-color: #eee;
-                border: none;
-                padding: 10px;
-                cursor: pointer;
-            }
-
-            .like-btn.active {
-                background-color: #f00;
-                color: #fff;
-            }
-        </style>
+        <!-- <script src="https://use.fontawesome.com/fe459689b4.js"></script> -->
+        <!-- <script src="./js/like.js"></script> -->
 
     </head>
 
     <body>
-        <script src="/js/like.js"></script>
         <div class="flex flex-row ">
             <!--Webtical links-->
             <?php include 'layouts/header.php'; ?>
             <!--Webtical main-->
-            <div class="basis-1/2 p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold">
+            <div class="basis-1/2 max-[970px]:basis-full p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold min-h-screen ">
                 <div class="flex justify-between">
                     <span class="text-lg font-semibold">
                         Notification
                     </span>
                     <i class="fi fi-ss-bell"></i>
                 </div>
-
-                <div class="pt-2"></div>
-
-                <div class="pt-2"></div>
+                <div class="pt-4"></div>
                 <div class="border border-gray-400 "></div>
                 <!--content-->
 
                 <!-- notification div -->
                 <!-- <div class=> -->
+                <div class="ml-4 mt-4">
+                    <?php
+                    $result = array_merge($result1, $result2);
 
-                <?php
-                $result = array_merge($result1, $result2);
+                    foreach ($result as $notif) {
 
-                foreach ($result as $notif) {
-
-                    if ($notif['type'] == "like") {
-                        echo "<i class='fi fi-rr-heart m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " liked your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                    } elseif ($notif['type'] == "comment") {
-                        echo "<i class='fi fi-rr-comments m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " commented on your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                    } elseif ($notif['type'] == "follow") {
-                        echo "<i class='fi fi-rr-following m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " followed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                    } elseif ($notif['type'] == "unfollow") {
-                        echo "<i class='fi fi-rr-delete-user m-6 te'></i><span class='text-gray-600' >" . $notif['username'] . " unfollowed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
-                    } else {
-                        echo "<i class='fi fi-rr-share-square m-6 text-lg'></i><span class='text-gray-600' >" . $notif['username'] . " shared your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        if ($notif['type'] == "like") {
+                            echo "<i class='fi fi-rr-heart m-6  text-lg '></i><span class='text-gray-600' >" . $notif['username'] . " liked your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        } elseif ($notif['type'] == "comment") {
+                            echo "<i class='fi fi-rr-comments m-6  text-lg '></i><span class='text-gray-600' >" . $notif['username'] . " commented on your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        } elseif ($notif['type'] == "follow") {
+                            echo "<i class='fi fi-rr-following m-6  text-lg '></i><span class='text-gray-600' >" . $notif['username'] . " followed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        } elseif ($notif['type'] == "unfollow") {
+                            echo "<i class='fi fi-rr-delete-user m-6  text-lg '></i><span class='text-gray-600' >" . $notif['username'] . " unfollowed you at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        } else {
+                            echo "<i class='fi fi-rr-share-square m-6  text-lg '></i><span class='text-gray-600' >" . $notif['username'] . " shared your post at <u>" . $notif['dateNotif'] . '</u></span><br>';
+                        }
+                        ?>
+                        <div class="py-4 "></div>
+                        <div class="border border-gray-400 "></div>
+                        <?php
                     }
-                ?>
-                    <div class="pt-2"></div>
-                    <div class="border border-gray-400 "></div>
-                <?php
-                }
 
-                ?>
+                    ?>
+                </div>
                 <!-- </div> -->
 
             </div>
@@ -137,7 +112,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
 
     </html>
 
-<?php
+    <?php
 
 } else {
     header('Location: index.php');

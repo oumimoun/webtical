@@ -70,6 +70,8 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/fe459689b4.js"></script>
         <script src="./js/like.js"></script>
+        <link rel="stylesheet" href="./style/lightbox.css">
+        <script src="./js/lightbox.js"></script>
         <style>
             input[type="file"] {
                 /* Remove default styles */
@@ -101,13 +103,15 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
             <!--Webtical links-->
             <?php include 'layouts/header.php'; ?>
             <!--Webtical main-->
-            <div class="basis-1/2 p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold">
+            <div class="basis-1/2 max-[800px]:basis-full p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold min-h-screen">
                 <div class="flex justify-between">
                     <span class="text-lg font-semibold">
                         Home
                     </span>
                     <i class="fa-solid fa-house"></i>
                 </div>
+                <div class="pt-4"></div>
+                <div class="border border-gray-400 "></div>
                 <div class="flex pt-2">
                     <div>
                         <img src="./uploads/<?php echo $profilepic; ?>" alt="" class="rounded-full w-14">
@@ -121,11 +125,7 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                     <div class="flex pt-3 mx-4  justify-between">
                         <div class="flex space-x-2">
                             <label for="file-upload" class="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer ">
-                                <!-- <img src="./img/image-photography-icon.svg" alt="" class="w-6 h-6 mr-2 rounded-sm"> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="add-image" class="w-6 h-6  ">
-                                    <path d="M19,10a1,1,0,0,0-1,1v3.38L16.52,12.9a2.79,2.79,0,0,0-3.93,0l-.7.71L9.41,11.12a2.79,2.79,0,0,0-3.93,0L4,12.61V7A1,1,0,0,1,5,6h8a1,1,0,0,0,0-2H5A3,3,0,0,0,2,7V19.22A2.79,2.79,0,0,0,4.78,22H17.22a2.88,2.88,0,0,0,.8-.12h0a2.74,2.74,0,0,0,2-2.65V11A1,1,0,0,0,19,10ZM5,20a1,1,0,0,1-1-1V15.43l2.89-2.89a.78.78,0,0,1,1.1,0L15.46,20Zm13-1a1,1,0,0,1-.18.54L13.3,15l.71-.7a.77.77,0,0,1,1.1,0L18,17.21ZM21,4H20V3a1,1,0,0,0-2,0V4H17a1,1,0,0,0,0,2h1V7a1,1,0,0,0,2,0V6h1a1,1,0,0,0,0-2Z"></path>
-                                </svg>
-                                <!-- <span>Choose a file</span> -->
+                                <i class="fas fa-image cursor-pointer"></i>
                             </label>
                             <input id="file-upload" type="file" name="image" class="hidden">
                         </div>
@@ -145,9 +145,14 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         <div>
                             <img src="./uploads/<?php echo $post['name']; ?>" alt="" class="rounded-full w-14">
                         </div>
-                        <span class="font-semibold"><?php echo $post['fullname'] ?></span>
-                        <span class="font-thin"><em>@</em><?php echo $post['username']; ?></span>
-                        <span class="font-light"><?php echo $post['datePub']; ?></span>
+                        <span class="font-semibold"><a href="showprofile.php?id=<?php echo $post['username']; ?>"><?php echo $post['fullname'] ?></a></span>
+
+                        <span class="font-thin"><em>@</em>
+                            <?php echo $post['username']; ?>
+                        </span>
+                        <span class="font-light italic max-[600px]:text-sm max-[600px]:mt-[2px]">
+                            <?php echo $post['datePub']; ?>
+                        </span>
 
                         <?php
                         $isAuthenticated = isset($_SESSION['username']);
@@ -186,27 +191,27 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                         <?php }; ?>
 
                     </div>
-                    <div class="pl-14 grid ">
-                        <br>
-                        <br>
-                        <span class="ml-8 w-96 truncate"><?php echo $post['contenuPub']; ?></span>
-                        <div class="rounded-md  p-4">
-                            <div class="flex space-x-3">
-                                <?php
-                                if ($post['image']) {
-                                    echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg w-96 h-auto ml-14 max-[1082px]:w-80 max-[1082px]:ml-5">';
-                                }
-                                ?>
+                    <div class="pl-14 grid flex">
+                        <span class="max-w-xl ml-4 mt-14 h-auto break-words max-[600px]:max-w-sm">
+                            <?php echo $post['contenuPub']; ?>
+                        </span>
+                        <div class="rounded-md p-4">
+                            <div class="flex">
+                                <?php if ($post['image']) { ?>
+                                    <img src="uploads/<?php echo $post['image']; ?>" class="post-image rounded-lg w-auto h-auto cursor-pointer" onclick="openLightbox(event, this)">
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="flex justify-between p-4">
-                            <a href="share.php?idPub=<?php echo $idPub;?>" class="share-btn"><i class="fi fi-rr-share-square ml-20"></i>
-                            <?php
-                                    $query = $db->query("SELECT COUNT(*) FROM shares WHERE post_id = '" . $idPub . "'");
-                                    echo $query->fetchColumn();
-                                    ?>
+                            <a href="share.php?idPub=<?php echo $idPub; ?>" class="share-btn">
+                                <i class="fi fi-rr-share-square hover:bg-gray-300 rounded-full py-3 px-3 "></i>
+                                <?php
+                                $query = $db->query("SELECT COUNT(*) FROM shares WHERE post_id = '" . $idPub . "'");
+                                echo $query->fetchColumn();
+                                ?>
                             </a>
-                            <a href="post.php?idPub=<?php echo $idPub; ?>"><i class="fi fi-rr-comments"></i>
+                            <a href="post.php?idPub=<?php echo $idPub; ?>">
+                                <i class="fi fi-rr-comments hover:bg-gray-300 rounded-full py-3 px-3"></i>
                                 <span class="" id="show_comments<?php echo $idPub; ?>">
                                     <?php
                                     $query = $db->query("SELECT COUNT(*) FROM comments WHERE idPub = '" . $idPub . "'");
@@ -214,17 +219,15 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                                     ?>
                                 </span>
                             </a>
-                            <a class="mr-28">
+                            <a class="">
                                 <?php
                                 $stmt = $db->prepare("SELECT * FROM likes WHERE idPub = :idPub AND username = :username");
                                 $stmt->execute(array(':idPub' => $idPub, ':username' => $_SESSION['username']));
                                 if ($stmt->rowCount() > 0) {
                                 ?>
-                                    <button value="<?php echo $idPub; ?>" class="unlike text-gray-700 font-medium">Unlike</button>
-                                <?php
-                                } else {
-                                ?>
-                                    <button value="<?php echo $idPub; ?>" class="like text-gray-700 font-medium">Like</button>
+                                    <button value="<?php echo $idPub; ?>" class="unlike text-gray-700 font-medium hover:bg-gray-300 rounded-full ">Unlike</button>
+                                <?php } else { ?>
+                                    <button value="<?php echo $idPub; ?>" class="like text-gray-700 font-medium hover:bg-gray-300 rounded-full  ">Like</button>
                                 <?php } ?>
                                 <span id="show_like<?php echo $idPub; ?>">
                                     <?php
@@ -233,24 +236,23 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                                     ?>
                                 </span>
                             </a>
-
-                            <!-- <i class="fa-solid fa-heart text-violet-950 hover:text-violet-600 duration-300"></i> -->
-                            &nbsp;
-
-
                         </div>
+                    </div>
+
+                    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+                        <img id="lightboxImage" src="" alt="Full-size Image" class="">
                     </div>
                 </div>
                 <div class="pt-2"></div>
                 <div class="border border-gray-400 "></div>
-                <div class="flex pt-4 justify-center">
+                <div class="flex pt-4 ">
                     <div>
-                        <img src="./uploads/<?php echo $profilepic; ?>" alt="" class="rounded-full w-14 flex justify-center">
+                        <img src="./uploads/<?php echo $profilepic; ?>" alt="" class="rounded-full w-14 h-auto flex justify-center">
                     </div>
                     <form action="comment.php" method="post">
 
                         <input type="hidden" name="idPub" value="<?php echo $idPub; ?>">
-                        <input type="text" name="comment" class="w-96 focus:outline-none focus:border-indigo-500/100 placeholder:text-medium placeholder:text-gray-400 placeholder:italic  rounded-full pl-2 p-4 ml-4 max-[1176px]:w-72 h-12" placeholder="Add a comment ..." required>
+                        <input type="text" name="comment" class="w-96 focus:outline-none focus:border-indigo-500/100 placeholder:text-medium placeholder:text-gray-400 placeholder:italic  rounded-full pl-2 p-4 ml-4 max-[1176px]:w-auto h-12" placeholder="Add a comment ..." required>
                         <button name="ok" class="rounded-full  text-white p-2 bg-teal-500 hover:bg-teal-700 duration-150">Comment</button>
                     </form>
                 </div>
@@ -259,30 +261,39 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['idPub'])) {
                     <?php
                     foreach ($comments as $comment) {
                     ?>
-                        <div id="post" class="post">
-                            <div class="flex pt-4 space-x-2">
+                        <div id="post" class="post relative border-2 border-gray-200 w-auto h-24 min-h-full  rounded-md ">
+                            <div class="flex space-x-2 ">
                                 <div>
-                                    <img src="./uploads/<?php echo $comment['name']; ?>" alt="" class="rounded-full w-14">
+                                    <img src="./uploads/<?php echo $comment['name']; ?>" alt="" class="rounded-full w-10 h-auto">
                                 </div>
-                                <span class="font-semibold"><?php echo $comment['fullname'] ?></span>
-                                <span class="font-thin"><em>@</em><?php echo $comment['username']; ?></span>
-                                <span class="font-light "><?php echo $comment['dateComment']; ?></span>
+                                <span class="font-semibold text-medium max-[1176px]:text-sm "><a href="showprofile.php?id=<?php echo $comment['username']; ?>"><?php echo $comment['fullname'] ?></a></span>
+
+                                <span class="font-thin max-[1176px]:text-sm"><em>@</em>
+                                    <?php echo $comment['username']; ?>
+                                </span>
+                                <span class="font-light italic max-[1176px]:text-sm">
+                                    <?php echo $comment['dateComment']; ?>
+                                </span>
                             </div>
-                            <div class="pl-14 grid ml-2 w-96 truncate">
-                                <span class=" "><?php echo $comment['contenuComment']; ?></span>
-                                <div class="rounded-md  p-4">
-                                </div>
+                            <div class="pl-14 ml-2 -mt-2  space-y-2  overflow-hidden">
+                                <p class="absolute right-0 left-12 text-base mr-4 overflow-x-auto overflow-y-auto ">
+                                    <?php echo $comment['contenuComment']; ?>
+                                </p>
                             </div>
+
                         </div>
+                        <!-- <div class="pt-2"></div> -->
+                        <!-- <div class="border border-gray-200 "></div> -->
                     <?php
                     }
                     ?>
-                    <div class="flex pt-3 mx-4  justify-between">
+                    <!-- <div class="flex pt-3 mx-4  justify-between">
                         <div class="">
                         </div>
-                    </div>
+                    </div> -->
+
                 </div>
-                <div class="pt-2"></div>
+                <div class="pt-4"></div>
                 <div class="border border-gray-200 "></div>
 
             </div>

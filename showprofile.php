@@ -67,8 +67,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['id'])) {
         <script src="https://use.fontawesome.com/fe459689b4.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
         <script src="./js/like.js"></script>
+        <link rel="stylesheet" href="./style/scroll.css">
 
     </head>
 
@@ -182,15 +183,13 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'], $_GET['id'])) {
                                 ?>
 
                             </div>
-                            <div class="pl-14 grid ">
-                                <br>
-                                <br>
-                                <span class="ml-4"><?php echo $post['contenuPub']; ?></span>
+                            <div class="pl-14 grid flex">
+                                <span class="max-w-xl ml-4 mt-14 h-auto break-words max-[600px]:max-w-sm"><?php echo $post['contenuPub']; ?></span>
                                 <div class="rounded-md  p-4">
                                     <div class="flex space-x-3">
                                         <?php
                                         if ($post['image'] && file_exists('uploads/' . $post['image'])) {
-                                            echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg w-96 h-auto ml-14" >';
+                                            echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg w-auto h-auto " >';
                                         }
                                         ?>
 

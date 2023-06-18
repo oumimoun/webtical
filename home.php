@@ -44,30 +44,9 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="./js/like.js"></script>
         <script src="./js/delete.js"></script>
-
-        <style>
-            input[type="file"] {
-                /* Remove default styles */
-                appearance: none;
-                -webkit-appearance: none;
-                /* Position off-screen */
-                position: absolute;
-                left: -9999px;
-            }
-
-            .like-btn {
-                background-color: #eee;
-                border: none;
-                padding: 10px;
-                cursor: pointer;
-            }
-
-            .like-btn.active {
-                background-color: #f00;
-                color: #fff;
-            }
-        </style>
-
+        <link rel="stylesheet" href="./style/lightbox.css">
+        <script src="./js/lightbox.js"></script>
+        <link rel="stylesheet" href="./style/scroll.css">
     </head>
 
     <body>
@@ -75,14 +54,16 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
             <!--Webtical links-->
             <?php include 'layouts/header.php'; ?>
             <!--Webtical main-->
-            <div class="basis-1/2 p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold">
+            <div class="basis-1/2  max-[970px]:basis-full p-4 bg-gray-200 rounded-md shadow-md text-black font-semibold min-h-screen">
                 <div class="flex justify-between">
                     <span class="text-lg font-semibold">
                         Home
                     </span>
                     <i class="fa-solid fa-house"></i>
                 </div>
-                <div class="flex pt-2">
+                <div class="pt-4"></div>
+                <div class="border border-gray-400 "></div>
+                <div class="flex pt-4">
                     <div>
                         <img src="./uploads/<?php echo $profilepic; ?>" alt="" class="rounded-full w-14 h-auto">
                     </div>
@@ -90,28 +71,18 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                         <input type="hidden" name="username" value="<?php echo $username; ?>">
                         <!-- <input type="text" name="content" class="focus:outline-none placeholder:text-lg placeholder:text-gray-400 placeholder:italic w-96 rounded-full pl-2 p-4 ml-4" placeholder="what's happening?" required> -->
                         <input type="text" name="content" class="focus:outline-none placeholder:text-lg placeholder:text-gray-400 placeholder:italic w-96 h-auto rounded-full pl-2 p-4 ml-4 " placeholder="What's happening?" required>
-
                 </div>
-
-
-
                 <div class="pt-2"></div>
-
                 <div class="grid pl-14 divide-y">
                     <div class="flex pt-3 mx-4  justify-between">
                         <div class="flex space-x-2">
-                            <label for="file-upload" class="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 cursor-pointer ">
-                                <!-- <img src="./img/image-photography-icon.svg" alt="" class="w-6 h-6 mr-2 rounded-sm"> -->
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="add-image" class="w-6 h-6  ">
-                                    <path d="M19,10a1,1,0,0,0-1,1v3.38L16.52,12.9a2.79,2.79,0,0,0-3.93,0l-.7.71L9.41,11.12a2.79,2.79,0,0,0-3.93,0L4,12.61V7A1,1,0,0,1,5,6h8a1,1,0,0,0,0-2H5A3,3,0,0,0,2,7V19.22A2.79,2.79,0,0,0,4.78,22H17.22a2.88,2.88,0,0,0,.8-.12h0a2.74,2.74,0,0,0,2-2.65V11A1,1,0,0,0,19,10ZM5,20a1,1,0,0,1-1-1V15.43l2.89-2.89a.78.78,0,0,1,1.1,0L15.46,20Zm13-1a1,1,0,0,1-.18.54L13.3,15l.71-.7a.77.77,0,0,1,1.1,0L18,17.21ZM21,4H20V3a1,1,0,0,0-2,0V4H17a1,1,0,0,0,0,2h1V7a1,1,0,0,0,2,0V6h1a1,1,0,0,0,0-2Z"></path>
-                                </svg>
-
+                            <label for="file-upload" class="flex items-center px-4 py-2 bg-gray-200  rounded-lg hover:bg-gray-300 cursor-pointer ">
+                                <i class="fas fa-image cursor-pointer"></i>
                             </label>
                             <input id="file-upload" type="file" name="image" class="hidden">
                         </div>
                         <div class="flex space-x-2">
                             <div id="emoji-picker"></div>
-
                         </div>
                         <div class="">
                             <button name="ok" class="rounded-full  text-white h-10 w-20 bg-teal-500 hover:bg-teal-700 duration-150">Post</button>
@@ -122,35 +93,33 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                 <div class="pt-2"></div>
                 <div class="border border-gray-400 "></div>
                 <!--content-->
-
                 <!-- post div -->
-
                 <?php
                 foreach ($posts as $post) {
                     // $username = $post['username'];
                     $idPub = $post['idPub'];
                 ?>
                     <div id="post" class="post">
-                        <script src="./js/delete.js"></script>
                         <div class="flex pt-2 space-x-2 absolute">
                             <div>
                                 <img src="./uploads/<?php echo $post['name']; ?>" alt="" class="rounded-full w-14 h-auto">
                             </div>
                             <span class="font-semibold"><a href="showprofile.php?id=<?php echo $post['username']; ?>"><?php echo $post['fullname'] ?></a></span>
-                            <span class="font-thin"><em>@</em><?php echo $post['username']; ?></span>
-                            <span class="font-light"><?php echo $post['datePub']; ?></span>
+                            <span class="font-thin"><em>@</em>
+                                <?php echo $post['username']; ?>
+                            </span>
+                            <span class="font-light italic max-[600px]:text-sm max-[600px]:mt-[2px]">
+                                <?php echo $post['datePub']; ?>
+                            </span>
                             <!-- <span class="options-link"><i id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="fas fa-ellipsis-h cursor-pointer "></i></span> -->
-
                             <!-- Contenu de votre page home.php -->
-
                             <?php
                             $isAuthenticated = isset($_SESSION['username']);
                             ?>
                             <?php if ($isAuthenticated) { ?>
-                                <span class="options-link">
-                                    <i id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="fas fa-ellipsis-h cursor-pointer"></i>
+                                <span class="options-link  ">
+                                    <i id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="fas fa-ellipsis-h cursor-pointer max-[600px]:break-words"></i>
                                 </span>
-
                                 <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 h-auto dark:bg-gray-700">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                                         <li>
@@ -159,17 +128,15 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                                             </a>
                                         </li>
                                     </ul>
-                                    <script src="./js/dropdown.js">
+                                    <script>
                                         var dropdownButton = document.getElementById('dropdownDefaultButton');
                                         var dropdown = document.getElementById('dropdown');
                                         var isAuthenticated = <?php echo $isAuthenticated ? 'true' : 'false'; ?>;
-
                                         dropdownButton.addEventListener('click', function() {
                                             if (isAuthenticated) {
                                                 dropdown.classList.toggle('hidden');
                                             }
                                         });
-
                                         window.addEventListener('click', function(event) {
                                             if (!dropdown.contains(event.target) && event.target !== dropdownButton) {
                                                 dropdown.classList.add('hidden');
@@ -180,32 +147,29 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                             <?php
                             }
                             ?>
-
                         </div>
-                        <div class="pl-14 grid ">
-                            <br>
-                            <br>
-                            <span class="ml-4 w-96 truncate"><?php echo $post['contenuPub']; ?></span>
-                            <div class="rounded-md  p-4">
-                                <div class="flex space-x-3">
 
-                                    <?php
-                                    if ($post['image']) {
-                                        echo '<img src="uploads/' . $post['image'] . '" class="rounded-lg ml-4 w-96 h-auto max-[1076px]:w-80 " >';
-                                    }
-                                    ?>
+                        <div class="pl-14 grid flex">
+                            <span class="w-auto h-auto ml-4 mt-14  break-words max-[600px]:max-w-sm">
+                                <?php echo $post['contenuPub']; ?>
+                            </span>
+                            <div class="rounded-md p-4">
+                                <div class="flex">
+                                    <?php if ($post['image']) { ?>
+                                        <img src="uploads/<?php echo $post['image']; ?>" class="post-image rounded-lg w-auto h-auto cursor-pointer" onclick="openLightbox(event, this)">
+                                    <?php } ?>
                                 </div>
                             </div>
-                            <div class="flex justify-between my-0  p-4">
-                                <a href="share.php?idPub=<?php echo $idPub; ?>" class="share-btn"><i class="fi fi-rr-share-square ml-20"></i>
+                            <div class="flex justify-between p-4">
+                                <a href="share.php?idPub=<?php echo $idPub; ?>" class="share-btn">
+                                    <i class="fi fi-rr-share-square hover:bg-gray-300 rounded-full py-3 px-3"></i>
                                     <?php
                                     $query = $db->query("SELECT COUNT(*) FROM shares WHERE post_id = '" . $idPub . "'");
                                     echo $query->fetchColumn();
                                     ?>
                                 </a>
-
-                                <!-- <i class="fa-solid fa-share text-violet-950 hover:text-violet-600 duration-300"></i> -->
-                                <a href="post.php?idPub=<?php echo $idPub; ?>"><i class="fi fi-rr-comments"></i>
+                                <a href="post.php?idPub=<?php echo $idPub; ?>">
+                                    <i class="fi fi-rr-comments hover:bg-gray-300 rounded-full py-3 px-3 "></i>
                                     <span class="" id="show_comments<?php echo $idPub; ?>">
                                         <?php
                                         $query = $db->query("SELECT COUNT(*) FROM comments WHERE idPub = '" . $idPub . "'");
@@ -213,18 +177,15 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                                         ?>
                                     </span>
                                 </a>
-                                <a class="mr-28">
-                                    <!-- <i class="fi fi-rr-heart "></i> -->
+                                <a class="">
                                     <?php
                                     $stmt = $db->prepare("SELECT * FROM likes WHERE idPub = :idPub AND username = :username");
                                     $stmt->execute(array(':idPub' => $idPub, ':username' => $_SESSION['username']));
                                     if ($stmt->rowCount() > 0) {
                                     ?>
-                                        <button value="<?php echo $idPub; ?>" class="unlike text-gray-700 font-medium">Unlike</button>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <button value="<?php echo $idPub; ?>" class="like text-gray-700 font-medium">Like</button>
+                                        <button value="<?php echo $idPub; ?>" class="unlike text-gray-700 font-medium hover:bg-gray-300 rounded-full ">Unlike</button>
+                                    <?php } else { ?>
+                                        <button value="<?php echo $idPub; ?>" class="like text-gray-700 font-medium hover:bg-gray-300 rounded-full ">Like</button>
                                     <?php } ?>
                                     <span id="show_like<?php echo $idPub; ?>">
                                         <?php
@@ -235,24 +196,28 @@ if (isset($_SESSION['loggedIn'], $_SESSION['username'])) {
                                 </a>
                             </div>
                         </div>
+
+                        <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+                            <img id="lightboxImage" src="" alt="Full-size Image" class="">
+                        </div>
+
                     </div>
                     <div class="pt-2"></div>
                     <div class="border border-gray-400 "></div>
                 <?php
                 }
                 ?>
-
             </div>
-            <!--Webtical trending & search-->
-            <?php include 'layouts/footer.php'; ?>
+            <div class="hidden min-[970px]:block">
+                <!--Webtical trending & search-->
+                <?php include 'layouts/footer.php'; ?>
+            </div>
         </div>
-        </div>
+
     </body>
 
     </html>
-
 <?php
-
 } else {
     header('Location: index.php');
 }
